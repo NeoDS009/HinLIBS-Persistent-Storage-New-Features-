@@ -454,3 +454,91 @@ int DatabaseManager::getHoldPosition(int userId, int itemId) {
 
     return -1;
 }
+
+bool DatabaseManager::addItemToCatalogue(const QString& title, const QString& author,
+                                        const QString& itemType, const QString& deweyDecimal,
+                                        const QString& isbn, const QString& genre,
+                                        const QString& rating, int issueNumber,
+                                        const QString& publicationDate, int publicationYear,
+                                        const QString& condition) {
+    if (!db.isOpen()) return false;
+
+    QSqlQuery query(db);
+    query.prepare(
+        "INSERT INTO catalogue_items "
+        "(title, author, item_type, dewey_decimal, isbn, genre, rating, "
+        "issue_number, publication_date, publication_year, condition, is_available) "
+        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1)"
+    );
+
+    // Convert item type to database format
+    QString dbItemType;
+    if (itemType == "Fiction Book") dbItemType = "fiction";
+    else if (itemType == "Non-Fiction Book") dbItemType = "nonfiction";
+    else if (itemType == "Magazine") dbItemType = "magazine";
+    else if (itemType == "Movie") dbItemType = "movie";
+    else if (itemType == "Video Game") dbItemType = "videogame";
+    else dbItemType = "fiction"; // default
+
+    query.addBindValue(title);
+    query.addBindValue(author);
+    query.addBindValue(dbItemType);
+    query.addBindValue(deweyDecimal.isEmpty() ? QVariant() : deweyDecimal);
+    query.addBindValue(isbn.isEmpty() ? QVariant() : isbn);
+    query.addBindValue(genre.isEmpty() ? QVariant() : genre);
+    query.addBindValue(rating.isEmpty() ? QVariant() : rating);
+    query.addBindValue(issueNumber == 0 ? QVariant() : issueNumber);
+    query.addBindValue(publicationDate.isEmpty() ? QVariant() : publicationDate);
+    query.addBindValue(publicationYear);
+    query.addBindValue(condition);
+
+    if (!query.exec()) {
+        qDebug() << "Error adding item to catalogue:" << query.lastError().text();
+        return false;
+    }
+
+    qDebug() << "Successfully added item to catalogue:" << title;
+    return true;
+}
+
+bool DatabaseManager::removeItemFromCatalogue(int itemId) {
+    if (!db.isOpen()) return false;
+
+    QSqlQuery query(db);
+
+    // First check if item is currently borrowed
+    query.prepare("SELECT COUNT(*) as count FROM loans WHERE item_id = ? AND return_date IS NULL");
+    query.addBindValue(itemId);
+
+    if (query.exec() && query.next()) {
+        int activeLoans = query.value("count").toInt();
+        if (activeLoans > 0) {
+            qDebug() << "Cannot remove item - it is currently borrowed";
+            return false;
+        }
+    }
+
+    // Also check if there are active holds
+    query.prepare("SELECT COUNT(*) as count FROM holds WHERE item_id = ?");
+    query.addBindValue(itemId);
+
+    if (query.exec() && query.next()) {
+        int activeHolds = query.value("count").toInt();
+        if (activeHolds > 0) {
+            qDebug() << "Cannot remove item - there are active holds";
+            return false;
+        }
+    }
+
+    // Safe to remove - delete from catalogue
+    query.prepare("DELETE FROM catalogue_items WHERE id = ?");
+    query.addBindValue(itemId);
+
+    if (!query.exec()) {
+        qDebug() << "Error removing item from catalogue:" << query.lastError().text();
+        return false;
+    }
+
+    qDebug() << "Successfully removed item ID:" << itemId;
+    return true;
+}

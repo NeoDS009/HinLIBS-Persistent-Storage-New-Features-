@@ -8,6 +8,7 @@
 #include <vector>
 #include "User.h"
 #include "LibraryItem.h"
+#include "AddItemDialog.h"
 
 class DatabaseManager {
 private:
@@ -46,6 +47,13 @@ public:
 
     int getHoldCountForItem(int itemID);
     int getHoldPosition(int userId, int itemId); //helper
+
+    bool addItemToCatalogue(const QString& title, const QString& author, const QString& itemType,
+                           const QString& deweyDecimal, const QString& isbn, const QString& genre,
+                           const QString& rating, int issueNumber, const QString& publicationDate,
+                           int publicationYear, const QString& condition);
+
+    bool removeItemFromCatalogue(int itemId);
 
 
 private:

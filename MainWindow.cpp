@@ -4,6 +4,9 @@
 #include <QApplication>
 #include <QCloseEvent>
 #include "DataManager.h"
+//#include "AddItemDialog.h"
+#include "PatronSelectionDialog.h"
+#include "PatronReturnDialog.h"
 
 
 MainWindow::MainWindow(User* user, QWidget *parent)
@@ -104,7 +107,166 @@ void MainWindow::setupUI() {
     mainLayout->addLayout(leftLayout, 2);
     mainLayout->addLayout(rightLayout, 2);
     setCentralWidget(centralWidget);
+
+    // AFTER your existing UI is set up, add librarian panel
+    setupLibrarianUI();
 }
+
+
+
+void MainWindow::setupLibrarianUI() {
+    // Only show librarian features for librarians/admins
+    if (currentUser->role != "librarian" && currentUser->role != "admin") {
+        return;
+    }
+
+    // Create librarian panel
+    librarianPanel = new QWidget();
+    QVBoxLayout* librarianLayout = new QVBoxLayout(librarianPanel);
+
+    QLabel* librarianLabel = new QLabel("Librarian Tools");
+    librarianLabel->setStyleSheet("font-weight: bold; font-size: 14px;");
+    librarianLayout->addWidget(librarianLabel);
+
+    // Librarian buttons
+    addItemButton = new QPushButton("Add New Item to Catalogue");
+    removeItemButton = new QPushButton("Remove Selected Item");
+    returnForPatronButton = new QPushButton("Return Item for Patron");
+
+    librarianLayout->addWidget(addItemButton);
+    librarianLayout->addWidget(removeItemButton);
+    librarianLayout->addWidget(returnForPatronButton);
+
+    // Add librarian panel to main layout (right side)
+    QHBoxLayout* mainLayout = qobject_cast<QHBoxLayout*>(centralWidget()->layout());
+    if (mainLayout) {
+        mainLayout->addWidget(librarianPanel, 1); // Add to right side
+    }
+
+    // Connect librarian buttons
+    connect(addItemButton, &QPushButton::clicked, this, &MainWindow::showAddItemDialog);
+    connect(removeItemButton, &QPushButton::clicked, this, &MainWindow::removeSelectedItem);
+    connect(returnForPatronButton, &QPushButton::clicked, this, &MainWindow::showReturnForPatronDialog);
+}
+
+
+
+
+void MainWindow::showAddItemDialog() {
+    AddItemDialog dialog(this);
+
+    if (dialog.exec() == QDialog::Accepted) {
+        // Get all the data from the dialog
+        bool success = DatabaseManager::getInstance().addItemToCatalogue(
+            dialog.getTitle(),
+            dialog.getAuthor(),
+            dialog.getItemType(),
+            dialog.getDeweyDecimal(),
+            dialog.getISBN(),
+            dialog.getGenre(),
+            dialog.getRating(),
+            dialog.getIssueNumber(),
+            dialog.getPublicationDate(),
+            dialog.getPublicationYear(),
+            dialog.getCondition()
+        );
+
+        if (success) {
+            QMessageBox::information(this, "Success", "Item added to catalogue successfully!");
+            refreshCatalogue();
+        } else {
+            QMessageBox::warning(this, "Error", "Failed to add item to catalogue.");
+        }
+    }
+}
+
+
+
+// TEMPORARY IMPLEMENTATIONS - We'll fill these in next
+void MainWindow::removeSelectedItem() {
+    LibraryItem* selected = getSelectedBook();
+
+    if (!selected) {
+        QMessageBox::warning(this, "Error", "Please select an item to remove!");
+        return;
+    }
+
+    int itemId = DatabaseManager::getInstance().getItemId(selected);
+    if (itemId == -1) {
+        QMessageBox::warning(this, "Error", "Could not find item in database!");
+        return;
+    }
+
+    // Confirm deletion
+    QMessageBox::StandardButton reply;
+    reply = QMessageBox::question(this, "Confirm Removal",
+                                 QString("Are you sure you want to remove:\n\"%1\"\n\nThis action cannot be undone!")
+                                 .arg(QString::fromStdString(selected->getTitle())),
+                                 QMessageBox::Yes | QMessageBox::No);
+
+    if (reply == QMessageBox::Yes) {
+        bool success = DatabaseManager::getInstance().removeItemFromCatalogue(itemId);
+        if (success) {
+            QMessageBox::information(this, "Success", "Item removed from catalogue!");
+            refreshCatalogue();
+        } else {
+            QMessageBox::warning(this, "Error",
+                               "Could not remove item. It may be currently borrowed or have active holds.");
+        }
+    }
+}
+
+
+void MainWindow::showReturnForPatronDialog() {
+    // Step 1: Select a patron
+    PatronSelectionDialog patronDialog(this);
+    if (patronDialog.exec() == QDialog::Accepted) {
+        User* selectedPatron = patronDialog.getSelectedPatron();
+
+        if (selectedPatron) {
+            // Step 2: Show patron's borrowed items
+            PatronReturnDialog returnDialog(selectedPatron, this);
+            if (returnDialog.exec() == QDialog::Accepted) {
+                LibraryItem* selectedItem = returnDialog.getSelectedItem();
+
+                if (selectedItem) {
+                    // Step 3: Process the return
+                    int itemId = DatabaseManager::getInstance().getItemId(selectedItem);
+                    processPatronReturn(selectedPatron->id, itemId);
+                } else {
+                    QMessageBox::information(this, "Info", "No item selected.");
+                }
+            }
+        } else {
+            QMessageBox::warning(this, "Error", "No patron selected.");
+        }
+    }
+}
+
+void MainWindow::processPatronReturn(int patronId, int itemId) {
+    bool success = DatabaseManager::getInstance().returnItem(patronId, itemId);
+
+    if (success) {
+        // Get patron name for success message
+        auto allUsers = DatabaseManager::getInstance().getAllUsers();
+        QString patronName;
+        for (auto user : allUsers) {
+            if (user->id == patronId) {
+                patronName = QString::fromStdString(user->name);
+                delete user; // Clean up
+            } else {
+                delete user; // Clean up
+            }
+        }
+
+        QMessageBox::information(this, "Success",
+                               QString("Successfully returned item for patron: %1").arg(patronName));
+        refreshCatalogue(); // Refresh to show item is available again
+    } else {
+        QMessageBox::warning(this, "Error", "Failed to return item.");
+    }
+}
+
 
 void MainWindow::logout() {
     this->close();

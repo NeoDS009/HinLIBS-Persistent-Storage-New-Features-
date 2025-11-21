@@ -138,6 +138,12 @@ private slots:
     */
     void showItemDetails();
 
+    // NEW Librarian slots
+    void showAddItemDialog();
+    void removeSelectedItem();
+    void showReturnForPatronDialog();
+    void processPatronReturn(int patronId, int itemId);
+
 private:
     User* currentUser;
 
@@ -149,6 +155,15 @@ private:
     QPushButton *holdButton;
     QPushButton *cancelHoldButton;
     QListWidget *holdsList;
+
+
+    // NEW Librarian UI members
+    QWidget* librarianPanel;
+    QPushButton* addItemButton;
+    QPushButton* removeItemButton;
+    QPushButton* returnForPatronButton;
+
+    void setupLibrarianUI();
 
 
     /*
