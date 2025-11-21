@@ -114,6 +114,41 @@ void MainWindow::setupUI() {
 
 
 
+//void MainWindow::setupLibrarianUI() {
+//    // Only show librarian features for librarians/admins
+//    if (currentUser->role != "librarian" && currentUser->role != "admin") {
+//        return;
+//    }
+
+//    // Create librarian panel
+//    librarianPanel = new QWidget();
+//    QVBoxLayout* librarianLayout = new QVBoxLayout(librarianPanel);
+
+//    QLabel* librarianLabel = new QLabel("Librarian Tools");
+//    librarianLabel->setStyleSheet("font-weight: bold; font-size: 14px;");
+//    librarianLayout->addWidget(librarianLabel);
+
+//    // Librarian buttons
+//    addItemButton = new QPushButton("Add New Item to Catalogue");
+//    removeItemButton = new QPushButton("Remove Selected Item");
+//    returnForPatronButton = new QPushButton("Return Item for Patron");
+
+//    librarianLayout->addWidget(addItemButton);
+//    librarianLayout->addWidget(removeItemButton);
+//    librarianLayout->addWidget(returnForPatronButton);
+
+//    // Add librarian panel to main layout (right side)
+//    QHBoxLayout* mainLayout = qobject_cast<QHBoxLayout*>(centralWidget()->layout());
+//    if (mainLayout) {
+//        mainLayout->addWidget(librarianPanel, 1); // Add to right side
+//    }
+
+//    // Connect librarian buttons
+//    connect(addItemButton, &QPushButton::clicked, this, &MainWindow::showAddItemDialog);
+//    connect(removeItemButton, &QPushButton::clicked, this, &MainWindow::removeSelectedItem);
+//    connect(returnForPatronButton, &QPushButton::clicked, this, &MainWindow::showReturnForPatronDialog);
+//}
+
 void MainWindow::setupLibrarianUI() {
     // Only show librarian features for librarians/admins
     if (currentUser->role != "librarian" && currentUser->role != "admin") {
@@ -124,18 +159,40 @@ void MainWindow::setupLibrarianUI() {
     librarianPanel = new QWidget();
     QVBoxLayout* librarianLayout = new QVBoxLayout(librarianPanel);
 
+    // Add some margins and spacing for better appearance
+    librarianLayout->setContentsMargins(10, 10, 10, 10); // Left, Top, Right, Bottom
+    librarianLayout->setSpacing(15); // More space between widgets
+
     QLabel* librarianLabel = new QLabel("Librarian Tools");
-    librarianLabel->setStyleSheet("font-weight: bold; font-size: 14px;");
+    librarianLabel->setStyleSheet("font-weight: bold; font-size: 14px; color: #2c3e50;");
+    librarianLabel->setAlignment(Qt::AlignCenter); // Center the text
     librarianLayout->addWidget(librarianLabel);
+
+    // Add a subtle separator line
+    QFrame* line = new QFrame();
+    line->setFrameShape(QFrame::HLine);
+    line->setFrameShadow(QFrame::Sunken);
+    line->setStyleSheet("color: #bdc3c7;");
+    librarianLayout->addWidget(line);
 
     // Librarian buttons
     addItemButton = new QPushButton("Add New Item to Catalogue");
     removeItemButton = new QPushButton("Remove Selected Item");
     returnForPatronButton = new QPushButton("Return Item for Patron");
 
+    // Style the buttons for a more professional look
+//    QString buttonStyle = "QPushButton { padding: 8px; font-weight: bold; }";
+    QString buttonStyle = "QPushButton { padding: 8px; }";
+    addItemButton->setStyleSheet(buttonStyle);
+    removeItemButton->setStyleSheet(buttonStyle);
+    returnForPatronButton->setStyleSheet(buttonStyle);
+
     librarianLayout->addWidget(addItemButton);
     librarianLayout->addWidget(removeItemButton);
     librarianLayout->addWidget(returnForPatronButton);
+
+    // Add stretch to push everything to the top
+    librarianLayout->addStretch();
 
     // Add librarian panel to main layout (right side)
     QHBoxLayout* mainLayout = qobject_cast<QHBoxLayout*>(centralWidget()->layout());
@@ -381,6 +438,23 @@ void MainWindow::refreshCatalogue() {
     refreshAccountStatus();
 }
 
+//void MainWindow::showItemDetails() {
+//    LibraryItem* item = getSelectedBook();
+//    if (!item) {
+//        item = getSelectedBorrowedItem();
+//    }
+//    if (!item) return;
+
+//    QString details = QString("Title: %1\nAuthor: %2\nFormat: %3\nPublication Year: %4\nCondition: %5")
+//        .arg(QString::fromStdString(item->getTitle()))
+//        .arg(QString::fromStdString(item->getAuthor()))
+//        .arg(QString::fromStdString(item->getFormat()))
+//        .arg(2023)
+//        .arg("Good");
+
+//    QMessageBox::information(this, "Item Details", details);
+//}
+
 void MainWindow::showItemDetails() {
     LibraryItem* item = getSelectedBook();
     if (!item) {
@@ -388,12 +462,11 @@ void MainWindow::showItemDetails() {
     }
     if (!item) return;
 
-    QString details = QString("Title: %1\nAuthor: %2\nFormat: %3\nPublication Year: %4\nCondition: %5")
+    QString details = QString("Title: %1\nAuthor: %2\nFormat: %3\n%4")
         .arg(QString::fromStdString(item->getTitle()))
         .arg(QString::fromStdString(item->getAuthor()))
         .arg(QString::fromStdString(item->getFormat()))
-        .arg(2023)
-        .arg("Good");
+        .arg(QString::fromStdString(item->getDetailedInfo()));
 
     QMessageBox::information(this, "Item Details", details);
 }

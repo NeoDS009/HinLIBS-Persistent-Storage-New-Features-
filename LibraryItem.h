@@ -142,6 +142,18 @@ public:
        }
        return text;
     }
+
+
+    // ADD NEW GETTERS
+    int getPublicationYear() const { return publicationYear; }
+    string getCondition() const { return condition; }
+
+
+    // NEW: Method to get detailed information
+    virtual string getDetailedInfo() const {
+        return "Publication Year: " + to_string(publicationYear) + "\n" +
+               "Condition: " + condition;
+    }
 };
 
 
@@ -160,6 +172,11 @@ private:
 public:
     FictionBook(string t, string a, int year, string cond, string isbn)
         : LibraryItem(t, a, "Fiction Book", year, cond), isbn(isbn) {}
+
+    string getDetailedInfo() const override {
+           return LibraryItem::getDetailedInfo() + "\n" +
+                  "ISBN: " + (isbn.empty() ? "N/A" : isbn);
+       }
 };
 
 
@@ -181,6 +198,12 @@ public:
     NonFictionBook(string t, string a, string dewey, int year, string cond, string isbn)
         : LibraryItem(t, a, "Non-Fiction Book", year, cond),
           deweyDecimal(dewey), isbn(isbn) {}
+
+    string getDetailedInfo() const override {
+        return LibraryItem::getDetailedInfo() + "\n" +
+               "Dewey Decimal: " + deweyDecimal + "\n" +
+               "ISBN: " + (isbn.empty() ? "N/A" : isbn);
+    }
 };
 
 
@@ -200,6 +223,12 @@ public:
     Magazine(string t, string a, int issue, string pubDate, int year, string cond)
         : LibraryItem(t, a, "Magazine", year, cond),
           issueNumber(issue), publicationDate(pubDate) {}
+
+    string getDetailedInfo() const override {
+        return LibraryItem::getDetailedInfo() + "\n" +
+               "Issue Number: " + to_string(issueNumber) + "\n" +
+               "Publication Date: " + publicationDate;
+    }
 };
 
 
@@ -219,6 +248,12 @@ public:
     Movie(string t, string a, string genre, string rating, int year, string cond)
         : LibraryItem(t, a, "Movie", year, cond),
           genre(genre), rating(rating) {}
+
+    string getDetailedInfo() const override {
+        return LibraryItem::getDetailedInfo() + "\n" +
+               "Genre: " + genre + "\n" +
+               "Rating: " + rating;
+    }
 };
 
 
@@ -238,6 +273,12 @@ public:
     VideoGame(string t, string a, string genre, string rating, int year, string cond)
         : LibraryItem(t, a, "Video Game", year, cond),
           genre(genre), rating(rating) {}
+
+    string getDetailedInfo() const override {
+        return LibraryItem::getDetailedInfo() + "\n" +
+               "Genre: " + genre + "\n" +
+               "Rating: " + rating;
+    }
 };
 
 #endif
