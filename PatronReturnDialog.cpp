@@ -1,6 +1,6 @@
 #include "PatronReturnDialog.h"
 #include "DatabaseManager.h"
-#include <QDebug>
+
 
 PatronReturnDialog::PatronReturnDialog(User* patron, QWidget *parent)
     : QDialog(parent), currentPatron(patron) {

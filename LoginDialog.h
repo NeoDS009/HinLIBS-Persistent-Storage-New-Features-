@@ -6,7 +6,6 @@
 #include <QPushButton>
 #include <QLabel>
 #include <QVBoxLayout>
-//#include "DataManager.h"
 #include "DatabaseManager.h"
 
 
@@ -61,7 +60,7 @@ public:
         Purpose: Provides access to the most recently authenticated user object
         Parameters: None
         Return: User* - Pointer to authenticated user, or nullptr if no successful login
-        Notes: Returns the actual User object from DataManager for role-based access control
+        Notes: Returns the actual User object from DatabaseManager for role-based access control
     */
     User* getLoggedInUser() { return lastAuthenticatedUser; }
 

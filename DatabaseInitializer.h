@@ -5,7 +5,6 @@
 #include <QSqlDatabase>
 #include <QSqlQuery>
 #include <QSqlError>
-#include <QDebug>
 
 /*
     DatabaseInitializer Class:
@@ -13,34 +12,14 @@
     Handles database schema creation and initial data population for the HinLIBS system.
     Implements intelligent initialization that only populates data for new databases.
 
-    Key Responsibilities:
-    - Create all necessary database tables with proper schema definitions
-    - Populate database with default users and catalogue items
-    - Prevent duplicate initialization on existing databases
-    - Ensure database integrity with foreign key constraints and unique indexes
+    Data Members: None (static class with no instance data)
 
-    Database Schema:
-    - users: User accounts with authentication and role management
-    - catalogue_items: Library items with type-specific metadata
-    - loans: Borrowing records with checkout/return dates
-    - holds: Hold queue management with position tracking
-
-    Initial Data:
-    - 7 default users: 5 patrons, 1 librarian, 1 system administrator
-    - 20 default catalogue items covering all required formats:
-      * 5 fiction books with ISBNs
-      * 5 non-fiction books with Dewey Decimal classification
-      * 3 magazines with issue numbers and publication dates
-      * 3 movies with genre and rating information
-      * 4 video games with genre and rating information
-
-    Design Patterns:
-    - Static utility class: No instantiation required, all methods are static
-    - Idempotent operations: Safe to call multiple times without side effects
-
-    Error Handling:
-    - Comprehensive error logging for all database operations
-    - Returns false on any initialization failure for caller handling
+    Member Functions:
+    - initializeDatabase(): Main method that orchestrates complete database setup
+    - createTables(): Defines and creates all database tables with proper schemas
+    - populateDefaultData(): Populates database with default users and catalogue items
+    - addDefaultUsers(): Inserts predefined user accounts
+    - addDefaultCatalogue(): Inserts default library items with realistic metadata
 */
 class DatabaseInitializer {
 public:

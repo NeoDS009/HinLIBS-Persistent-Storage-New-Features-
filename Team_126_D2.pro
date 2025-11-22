@@ -1,6 +1,6 @@
 QT       += core gui
 
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets sql #added sql
+greaterThan(QT_MAJOR_VERSION, 4): QT += widgets sql
 
 CONFIG += c++11
 
@@ -20,7 +20,6 @@ SOURCES += \
 
 HEADERS += \
     AddItemDialog.h \
-    DataManager.h \
     DatabaseInitializer.h \
     DatabaseManager.h \
     LibraryItem.h \

@@ -1,8 +1,8 @@
-#include "AddItemDialog.h"
 #include <QLabel>
 #include <QDialogButtonBox>
 #include <QMessageBox>
 #include <QDate>
+#include "AddItemDialog.h"
 
 AddItemDialog::AddItemDialog(QWidget *parent) : QDialog(parent) {
     setupUI();

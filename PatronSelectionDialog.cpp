@@ -1,6 +1,6 @@
 #include "PatronSelectionDialog.h"
 #include "DatabaseManager.h"
-#include <QDebug>
+
 
 PatronSelectionDialog::PatronSelectionDialog(QWidget *parent) : QDialog(parent) {
     setWindowTitle("Select Patron");

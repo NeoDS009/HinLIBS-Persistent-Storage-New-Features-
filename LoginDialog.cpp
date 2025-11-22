@@ -1,7 +1,6 @@
-#include "LoginDialog.h"
-#include "DataManager.h"
-#include "DatabaseManager.h" //new: testing
 #include <QMessageBox>
+#include "LoginDialog.h"
+#include "DatabaseManager.h"
 
 LoginDialog::LoginDialog(QWidget *parent) : QDialog(parent) {
     setWindowTitle("HinLIBS Login");

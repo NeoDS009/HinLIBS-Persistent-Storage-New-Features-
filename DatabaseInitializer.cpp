@@ -1,17 +1,14 @@
-#include "DatabaseInitializer.h"
 #include <QDebug>
 #include <QDate>
 #include <QFileInfo>
 #include <QDir>
+#include "DatabaseInitializer.h"
 
 bool DatabaseInitializer::initializeDatabase(const QString& databasePath) {
     // Use absolute path to be sure
     QString absolutePath = QDir::current().absoluteFilePath(databasePath);
     QFileInfo dbFile(absolutePath);
     bool databaseExists = dbFile.exists();
-
-//    qDebug() << "Checking database at:" << absolutePath;
-//    qDebug() << "Database exists:" << databaseExists;
 
     // Set up database connection
     QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
@@ -40,7 +37,6 @@ bool DatabaseInitializer::initializeDatabase(const QString& databasePath) {
     }
 
     db.close();
-//    qDebug() << "Database initialized successfully at:" << databasePath;
     return true;
 }
 
