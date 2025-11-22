@@ -10,9 +10,10 @@ DatabaseManager::DatabaseManager() {
 
     if (!db.open()) {
         qDebug() << "Error opening database:" << db.lastError().text();
-    } else {
-        qDebug() << "Database opened successfully";
     }
+//    else {
+//        qDebug() << "Database opened successfully";
+//    }
 }
 
 DatabaseManager& DatabaseManager::getInstance() {
@@ -39,7 +40,7 @@ User* DatabaseManager::findUser(const QString& username) {
         return nullptr;
     }
 
-    qDebug() << "Searching for user:" << username;
+//    qDebug() << "Searching for user:" << username;
 
     QSqlQuery query(db);
     query.prepare("SELECT id, username, role FROM users WHERE username = ?");
@@ -51,7 +52,7 @@ User* DatabaseManager::findUser(const QString& username) {
             QString foundUsername = query.value("username").toString();
             QString role = query.value("role").toString();
 
-            qDebug() << "Found user:" << foundUsername << "Role:" << role << "ID:" << id;
+//            qDebug() << "Found user:" << foundUsername << "Role:" << role << "ID:" << id;
             return new User(id, foundUsername.toStdString(), role.toStdString());
         } else {
             qDebug() << "No user found with username:" << username;
@@ -90,7 +91,7 @@ std::vector<LibraryItem*> DatabaseManager::getAllCatalogueItems() {
     }
 
     QSqlQuery query("SELECT * FROM catalogue_items", db);
-    qDebug() << "Executing catalogue query...";
+//    qDebug() << "Executing catalogue query...";
 
     int count = 0;
     while (query.next()) {
@@ -101,7 +102,7 @@ std::vector<LibraryItem*> DatabaseManager::getAllCatalogueItems() {
         }
     }
 
-    qDebug() << "Loaded" << count << "items from database";
+//    qDebug() << "Loaded" << count << "items from database";
     return items;
 }
 
@@ -155,29 +156,28 @@ LibraryItem* DatabaseManager::createItemFromQuery(const QSqlQuery& query) {
 }
 
 
-// Add this to DatabaseManager.cpp
-void DatabaseManager::debugPrintAllUsers() {
-    if (!db.isOpen()) {
-        qDebug() << "Database not open for debug!";
-        return;
-    }
+//void DatabaseManager::debugPrintAllUsers() {
+//    if (!db.isOpen()) {
+//        qDebug() << "Database not open for debug!";
+//        return;
+//    }
 
-    QSqlQuery query("SELECT id, username, role FROM users", db);
-    qDebug() << "=== ALL USERS IN DATABASE ===";
+//    QSqlQuery query("SELECT id, username, role FROM users", db);
+////    qDebug() << "=== ALL USERS IN DATABASE ===";
 
-    int count = 0;
-    while (query.next()) {
-        QString username = query.value("username").toString();
-        QString role = query.value("role").toString();
-        int id = query.value("id").toInt();
-        qDebug() << "User" << ++count << ":" << username << "(" << role << ") ID:" << id;
-    }
+//    int count = 0;
+//    while (query.next()) {
+//        QString username = query.value("username").toString();
+//        QString role = query.value("role").toString();
+//        int id = query.value("id").toInt();
+////        qDebug() << "User" << ++count << ":" << username << "(" << role << ") ID:" << id;
+//    }
 
-    if (count == 0) {
-        qDebug() << "NO USERS FOUND IN DATABASE!";
-    }
-    qDebug() << "=== END USER LIST ===";
-}
+//    if (count == 0) {
+//        qDebug() << "NO USERS FOUND IN DATABASE!";
+//    }
+////    qDebug() << "=== END USER LIST ===";
+//}
 
 int DatabaseManager::getItemId(LibraryItem* item) {
     if (!db.isOpen() || !item) return -1;
@@ -194,7 +194,6 @@ int DatabaseManager::getItemId(LibraryItem* item) {
     return -1;
 }
 
-// Stub implementations for now - we'll fill these in later
 bool DatabaseManager::borrowItem(int userId, int itemId) {
     if (!db.isOpen()) {
         qDebug() << "Database not open for borrowing!";
@@ -211,7 +210,7 @@ bool DatabaseManager::borrowItem(int userId, int itemId) {
         qDebug() << "Error updating item availability:" << query.lastError().text();
         return false;
     }
-    qDebug() << "Updated item" << itemId << "to unavailable";
+//    qDebug() << "Updated item" << itemId << "to unavailable";
 
     // 2. Create loan record in loans table
     QDate checkoutDate = QDate::currentDate();
@@ -227,7 +226,7 @@ bool DatabaseManager::borrowItem(int userId, int itemId) {
         qDebug() << "Error creating loan record:" << query.lastError().text();
         return false;
     }
-    qDebug() << "Created loan record for user" << userId << "item" << itemId;
+//    qDebug() << "Created loan record for user" << userId << "item" << itemId;
 
     return true;
 }
@@ -257,7 +256,7 @@ bool DatabaseManager::returnItem(int userId, int itemId) {
         return false;
     }
 
-    qDebug() << "Successfully returned item" << itemId << "for user" << userId;
+//    qDebug() << "Successfully returned item" << itemId << "for user" << userId;
     return true;
 }
 
@@ -314,7 +313,7 @@ bool DatabaseManager::placeHold(int userId, int itemId) {
         return false;
     }
 
-    qDebug() << "Placed hold for user" << userId << "on item" << itemId << "at position" << position;
+//    qDebug() << "Placed hold for user" << userId << "on item" << itemId << "at position" << position;
     return true;
 }
 
@@ -351,38 +350,11 @@ bool DatabaseManager::cancelHold(int userId, int itemId) {
         query.exec(); // We don't care too much if this fails
     }
 
-    qDebug() << "Cancelled hold for user" << userId << "on item" << itemId;
+//    qDebug() << "Cancelled hold for user" << userId << "on item" << itemId;
     return true;
 }
 
-//std::vector<LibraryItem*> DatabaseManager::getUserHolds(int userId) {
-//    std::vector<LibraryItem*> items;
 
-//    if (!db.isOpen()) return items;
-
-//    QSqlQuery query(db);
-//    query.prepare(
-//        "SELECT ci.*, h.position FROM catalogue_items ci "
-//        "JOIN holds h ON ci.id = h.item_id "
-//        "WHERE h.user_id = ? ORDER BY h.position"
-//    );
-//    query.addBindValue(userId);
-
-//    if (query.exec()) {
-//        while (query.next()) {
-//            LibraryItem* item = createItemFromQuery(query);
-//            if (item) {
-//                items.push_back(item);
-//            }
-//        }
-//    } else {
-//        qDebug() << "Error getting user holds:" << query.lastError().text();
-//    }
-
-//    return items;
-//}
-
-// try 2
 std::vector<LibraryItem*> DatabaseManager::getUserHolds(int userId) {
     std::vector<LibraryItem*> items;
 
@@ -497,7 +469,7 @@ bool DatabaseManager::addItemToCatalogue(const QString& title, const QString& au
         return false;
     }
 
-    qDebug() << "Successfully added item to catalogue:" << title;
+//    qDebug() << "Successfully added item to catalogue:" << title;
     return true;
 }
 
@@ -539,6 +511,6 @@ bool DatabaseManager::removeItemFromCatalogue(int itemId) {
         return false;
     }
 
-    qDebug() << "Successfully removed item ID:" << itemId;
+//    qDebug() << "Successfully removed item ID:" << itemId;
     return true;
 }

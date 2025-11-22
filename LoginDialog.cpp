@@ -43,9 +43,8 @@ void LoginDialog::attemptLogin() {
         return;
     }
 
-    // Authenticate against DataManage
-//    User* user = DataManager::getInstance().findUser(username.toStdString());   //working, using DataManager class
-    User* user = DatabaseManager::getInstance().findUser(username);    //testing with DatabaseManagger
+    // Authenticate against DatabaseManager
+    User* user = DatabaseManager::getInstance().findUser(username);
 
 
     if (user) {

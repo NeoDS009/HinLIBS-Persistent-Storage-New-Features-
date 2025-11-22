@@ -71,51 +71,8 @@ void AddItemDialog::setupUI() {
     connect(buttonBox, &QDialogButtonBox::accepted, this, &QDialog::accept);
     connect(buttonBox, &QDialogButtonBox::rejected, this, &QDialog::reject);
 
-    // Set initial visibility
     updateFieldsVisibility();
 }
-
-//void AddItemDialog::updateFieldsVisibility() {
-//    QString itemType = itemTypeCombo->currentText();
-
-//    // Show/hide fields based on item type
-//    bool isBook = itemType.contains("Book");
-//    bool isNonFiction = (itemType == "Non-Fiction Book");
-//    bool isMagazine = (itemType == "Magazine");
-//    bool isMedia = (itemType == "Movie" || itemType == "Video Game");
-
-//    // Find the form layout
-//    QFormLayout *layout = qobject_cast<QFormLayout*>(this->layout());
-//    if (!layout) return;
-
-//    // Show Dewey Decimal only for non-fiction books
-//    QLabel *deweyLabel = qobject_cast<QLabel*>(layout->labelForField(deweyDecimalEdit));
-//    if (deweyLabel) deweyLabel->setVisible(isNonFiction);
-//    deweyDecimalEdit->setVisible(isNonFiction);
-
-//    // Show ISBN for books
-//    QLabel *isbnLabel = qobject_cast<QLabel*>(layout->labelForField(isbnEdit));
-//    if (isbnLabel) isbnLabel->setVisible(isBook);
-//    isbnEdit->setVisible(isBook);
-
-//    // Show magazine fields
-//    QLabel *issueLabel = qobject_cast<QLabel*>(layout->labelForField(issueNumberSpin));
-//    if (issueLabel) issueLabel->setVisible(isMagazine);
-//    issueNumberSpin->setVisible(isMagazine);
-
-//    QLabel *pubDateLabel = qobject_cast<QLabel*>(layout->labelForField(publicationDateEdit));
-//    if (pubDateLabel) pubDateLabel->setVisible(isMagazine);
-//    publicationDateEdit->setVisible(isMagazine);
-
-//    // Show media fields
-//    QLabel *genreLabel = qobject_cast<QLabel*>(layout->labelForField(genreEdit));
-//    if (genreLabel) genreLabel->setVisible(isMedia);
-//    genreEdit->setVisible(isMedia);
-
-//    QLabel *ratingLabel = qobject_cast<QLabel*>(layout->labelForField(ratingCombo));
-//    if (ratingLabel) ratingLabel->setVisible(isMedia);
-//    ratingCombo->setVisible(isMedia);
-//}
 
 void AddItemDialog::updateFieldsVisibility() {
     QString itemType = itemTypeCombo->currentText();

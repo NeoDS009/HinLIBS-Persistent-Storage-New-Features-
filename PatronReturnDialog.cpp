@@ -26,7 +26,6 @@ PatronReturnDialog::PatronReturnDialog(User* patron, QWidget *parent)
 }
 
 PatronReturnDialog::~PatronReturnDialog() {
-    // Clean up borrowed items
     for (auto item : borrowedItems) {
         delete item;
     }
@@ -45,23 +44,6 @@ void PatronReturnDialog::loadBorrowedItems() {
         itemsList->setEnabled(false);
     }
 }
-
-//void PatronReturnDialog::loadBorrowedItems() {
-//    auto itemsVector = DatabaseManager::getInstance().getUserBorrowedItems(currentPatron->id);
-
-//    // Convert std::vector to QList
-//    borrowedItems = QList<LibraryItem*>(itemsVector.begin(), itemsVector.end());
-
-//    for (auto item : borrowedItems) {
-//        QString displayText = QString::fromStdString(item->getDisplayText());
-//        itemsList->addItem(displayText);
-//    }
-
-//    if (borrowedItems.empty()) {
-//        itemsList->addItem("No borrowed items found");
-//        itemsList->setEnabled(false);
-//    }
-//}
 
 LibraryItem* PatronReturnDialog::getSelectedItem() const {
     int currentRow = itemsList->currentRow();

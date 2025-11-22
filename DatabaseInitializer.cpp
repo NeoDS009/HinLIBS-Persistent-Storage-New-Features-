@@ -4,41 +4,14 @@
 #include <QFileInfo>
 #include <QDir>
 
-//bool DatabaseInitializer::initializeDatabase(const QString& databasePath) {
-//    // Set up database connection
-//    QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
-//    db.setDatabaseName(databasePath);
-
-//    if (!db.open()) {
-//        qDebug() << "Error opening database:" << db.lastError().text();
-//        return false;
-//    }
-
-//    // Create tables
-//    if (!createTables(db)) {
-//        db.close();
-//        return false;
-//    }
-
-//    // Populate with default data
-//    if (!populateDefaultData(db)) {
-//        db.close();
-//        return false;
-//    }
-
-//    db.close();
-//    qDebug() << "Database initialized successfully at:" << databasePath;
-//    return true;
-//}
-
 bool DatabaseInitializer::initializeDatabase(const QString& databasePath) {
     // Use absolute path to be sure
     QString absolutePath = QDir::current().absoluteFilePath(databasePath);
     QFileInfo dbFile(absolutePath);
     bool databaseExists = dbFile.exists();
 
-    qDebug() << "Checking database at:" << absolutePath;
-    qDebug() << "Database exists:" << databaseExists;
+//    qDebug() << "Checking database at:" << absolutePath;
+//    qDebug() << "Database exists:" << databaseExists;
 
     // Set up database connection
     QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
@@ -67,7 +40,7 @@ bool DatabaseInitializer::initializeDatabase(const QString& databasePath) {
     }
 
     db.close();
-    qDebug() << "Database initialized successfully at:" << databasePath;
+//    qDebug() << "Database initialized successfully at:" << databasePath;
     return true;
 }
 

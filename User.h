@@ -33,7 +33,7 @@
 */
 class User {
 public:
-    int id; //new for database
+    int id;
     string name;
     string role;
     vector<LibraryItem*> borrowedItems;
