@@ -15,11 +15,14 @@
     Data Members: None (static class with no instance data)
 
     Member Functions:
-    - initializeDatabase(): Main method that orchestrates complete database setup
-    - createTables(): Defines and creates all database tables with proper schemas
-    - populateDefaultData(): Populates database with default users and catalogue items
-    - addDefaultUsers(): Inserts predefined user accounts
-    - addDefaultCatalogue(): Inserts default library items with realistic metadata
+      Public:
+        - initializeDatabase(): Main method that orchestrates complete database setup
+
+      Private:
+        - createTables(): Defines and creates all database tables with proper schemas
+        - populateDefaultData(): Populates database with default users and catalogue items
+        - addDefaultUsers(): Inserts predefined user accounts
+        - addDefaultCatalogue(): Inserts default library items with realistic metadata
 */
 class DatabaseInitializer {
 public:

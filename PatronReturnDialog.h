@@ -22,10 +22,13 @@
       - std::vector<LibraryItem*> borrowedItems: Container for patron's borrowed items
 
     Member Functions:
+      Public:
       - PatronReturnDialog(): Constructor that initializes the dialog for a specific patron
       - getSelectedItem(): Returns the currently selected LibraryItem for return
       - ~PatronReturnDialog(): Destructor that cleans up allocated LibraryItem objects
-      - loadBorrowedItems(): Loads patron's borrowed items from database
+
+      Private:
+        - loadBorrowedItems(): Loads patron's borrowed items from database
 */
 class PatronReturnDialog : public QDialog {
     Q_OBJECT

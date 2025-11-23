@@ -30,9 +30,12 @@
       - QList<User*> allPatrons: Internal collection of patron user objects
 
     Member Functions:
+      Public:
       - PatronSelectionDialog(): Constructs and initializes the dialog
       - getSelectedPatron(): Returns the user-selected patron object
-      - loadPatrons(): Populates the list with patron accounts from database
+
+      Private:
+        - loadPatrons(): Populates the list with patron accounts from database
 
     Integration Points:
       - Used by MainWindow::showReturnForPatronDialog() as first step in patron return flow
