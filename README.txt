@@ -1,6 +1,6 @@
 PREAMBLE
 Program Author: 
-Deneo [last name], [student number] //last name and student number have been erased for privacy purposes, thank you for understanding!
+Deneo Shi, 101271921
 
 Purpose:
 HinLIBS (Hintonville Library Information and Borrowing System) is a vertical prototype 
@@ -86,7 +86,7 @@ Cancelling Holds:
 - Select a hold from "Your Active Holds" list (lower-right panel)
 - Click "Cancel Selected Hold" button
 
-Librarian-specific features: **only if logged in successfully as 'libby' **
+Librarian-specific features: **only if logged in successfully as 'libby' or 'admin' **
 Add Item to Catalogue:
 - Click "Add New Item to Catalogue" button
 - Input desired item details
@@ -107,5 +107,4 @@ NOTES:
 - The UI is implemented programmatically in C++ for dynamic role-based content (in `MainWindow::setupUI()`)
 - The system includes robust error handling for database operations
 - In the current prototype, closing the main window (via X button or Logout) returns the user to the login screen
-
 - To end the program, close the login window
