@@ -36,11 +36,6 @@
 
       Private:
         - loadPatrons(): Populates the list with patron accounts from database
-
-    Integration Points:
-      - Used by MainWindow::showReturnForPatronDialog() as first step in patron return flow
-      - Interfaces with DatabaseManager to retrieve patron accounts
-      - Returns selected patron to calling code for further processing
 */
 class PatronSelectionDialog : public QDialog {
     Q_OBJECT

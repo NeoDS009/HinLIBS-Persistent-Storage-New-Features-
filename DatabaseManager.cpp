@@ -473,6 +473,36 @@ bool DatabaseManager::removeItemFromCatalogue(int itemId) {
         return false;
     }
 
-//    qDebug() << "Successfully removed item ID:" << itemId;
     return true;
+}
+
+std::vector<DatabaseManager::LoanInfo> DatabaseManager::getUserLoansWithDates(int userId) {
+    std::vector<LoanInfo> loans;
+
+    if (!db.isOpen()) return loans;
+
+    QSqlQuery query(db);
+    query.prepare(
+        "SELECT ci.*, l.checkout_date, l.due_date FROM catalogue_items ci "
+        "JOIN loans l ON ci.id = l.item_id "
+        "WHERE l.user_id = ? AND l.return_date IS NULL"
+    );
+    query.addBindValue(userId);
+
+    if (query.exec()) {
+        while (query.next()) {
+            LibraryItem* item = createItemFromQuery(query);
+            if (item) {
+                LoanInfo loan;
+                loan.item = item;
+                loan.checkoutDate = query.value("checkout_date").toString();
+                loan.dueDate = query.value("due_date").toString();
+                loans.push_back(loan);
+            }
+        }
+    } else {
+        qDebug() << "Error getting user loans with dates:" << query.lastError().text();
+    }
+
+    return loans;
 }

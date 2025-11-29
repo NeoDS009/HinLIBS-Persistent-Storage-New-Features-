@@ -26,20 +26,27 @@ PatronReturnDialog::PatronReturnDialog(User* patron, QWidget *parent)
 }
 
 PatronReturnDialog::~PatronReturnDialog() {
-    for (auto item : borrowedItems) {
-        delete item;
+    // Clean up loan items
+    for (auto& loan : patronLoans) {
+        delete loan.item;
     }
 }
 
 void PatronReturnDialog::loadBorrowedItems() {
-    borrowedItems = DatabaseManager::getInstance().getUserBorrowedItems(currentPatron->id);
+    patronLoans = DatabaseManager::getInstance().getUserLoansWithDates(currentPatron->id);
 
-    for (auto item : borrowedItems) {
-        QString displayText = QString::fromStdString(item->getDisplayText());
+    for (const auto& loan : patronLoans) {
+        QString displayText = QString::fromStdString(loan.item->getDisplayText());
+
+        // ADD DATES TO DISPLAY
+        displayText += QString("\n  Checked out: %1 | Due: %2")
+                      .arg(loan.checkoutDate)
+                      .arg(loan.dueDate);
+
         itemsList->addItem(displayText);
     }
 
-    if (borrowedItems.empty()) {
+    if (patronLoans.empty()) {
         itemsList->addItem("No borrowed items found");
         itemsList->setEnabled(false);
     }
@@ -47,8 +54,8 @@ void PatronReturnDialog::loadBorrowedItems() {
 
 LibraryItem* PatronReturnDialog::getSelectedItem() const {
     int currentRow = itemsList->currentRow();
-    if (currentRow >= 0 && currentRow < borrowedItems.size()) {
-        return borrowedItems[currentRow];
+    if (currentRow >= 0 && currentRow < patronLoans.size()) {
+        return patronLoans[currentRow].item;
     }
     return nullptr;
 }

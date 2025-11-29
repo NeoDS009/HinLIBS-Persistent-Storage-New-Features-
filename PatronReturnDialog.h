@@ -8,6 +8,7 @@
 #include <QDialogButtonBox>
 #include "User.h"
 #include "LibraryItem.h"
+#include "DatabaseManager.h"
 
 /*
     PatronReturnDialog Class:
@@ -63,7 +64,7 @@ public:
 private:
     User* currentPatron;
     QListWidget *itemsList;
-    std::vector<LibraryItem*> borrowedItems;
+    std::vector<DatabaseManager::LoanInfo> patronLoans;
 
     /*
         Function: loadBorrowedItems

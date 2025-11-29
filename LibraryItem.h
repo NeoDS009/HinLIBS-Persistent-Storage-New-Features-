@@ -26,7 +26,10 @@ using namespace std;
     - Hold queue management with FIFO ordering
     - Polymorphic detailed information display
     - Type-specific data fields and validation
-    - Database-compatible data structure
+    - Database-compatible data structure:
+       - All data members map directly to database table columns
+       - Supports object-relational mapping for persistence
+       - Compatible with SQLite catalogue_items table structure
 
     Data Members (LibraryItem base):
       - string title: The title of the library item
@@ -44,11 +47,6 @@ using namespace std;
       - removeHold(): Removes a user from the hold queue
       - getHoldPosition(): Returns user's position in hold queue (1-based)
       - Various getters/setters for item properties
-
-    Database Integration:
-      - All data members map directly to database table columns
-      - Supports object-relational mapping for persistence
-      - Compatible with SQLite catalogue_items table structure
 */
 
 class LibraryItem {

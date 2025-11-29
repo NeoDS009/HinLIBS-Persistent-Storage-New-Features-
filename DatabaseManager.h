@@ -30,11 +30,6 @@
     - Loans table: Active borrowing records with due dates
     - Holds table: Hold queue management with position tracking
 
-    Design Patterns:
-    - Singleton: Ensures single database connection instance
-    - Data Access Object: Abstracts database operations from business logic
-    - Object-Relational Mapping: Bridges C++ objects and database tables
-
     Data Members:
       - QSqlDatabase db: SQLite database connection instance
       - static DatabaseManager* instance: Singleton instance pointer
@@ -69,20 +64,12 @@
         Utility Methods:
         - isDatabaseOpen(): Verifies database connection status
         - getItemId(): Resolves LibraryItem to database ID
+        - getUserLoansWithDates(): Gets detaiils of a user's loans
 
       Private:
         - DatabaseManager(): Private constructor for singleton pattern
         - createItemFromQuery(): Factory method for LibraryItem objects
 
-    Error Handling:
-      - All methods return appropriate success/failure indicators
-      - SQL errors are logged to console for debugging
-      - Business rule violations prevent invalid operations
-
-    Transaction Safety:
-      - Critical operations use database transactions
-      - Failed operations rollback to maintain consistency
-      - Concurrent access handled through SQLite locking
 */
 class DatabaseManager {
 private:
@@ -279,6 +266,22 @@ public:
         Return: bool - True if item removed successfully, false if prevented by safety checks
     */
     bool removeItemFromCatalogue(int itemId);
+
+
+    /*
+        Function: getUserLoansWithDates
+        Purpose: Method that returns user loans details.
+        Parameters:
+          in: int userId
+        Return: LoanInfo - an array with the loan details
+    */
+    struct LoanInfo {
+        LibraryItem* item;
+        QString checkoutDate;
+        QString dueDate;
+    };
+    std::vector<LoanInfo> getUserLoansWithDates(int userId);
+
 
 private:
     /*
