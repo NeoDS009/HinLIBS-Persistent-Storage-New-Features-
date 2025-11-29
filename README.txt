@@ -1,6 +1,6 @@
 PREAMBLE
 Program Author: 
-Deneo Shi, 101271921
+Deneo [last name], [student number]  //my last name and student number have been blurred for privacy reasons, thank you for understanding! :)
 
 Purpose:
 HinLIBS (Hintonville Library Information and Borrowing System) is a vertical prototype 
@@ -107,4 +107,5 @@ NOTES:
 - The UI is implemented programmatically in C++ for dynamic role-based content (in `MainWindow::setupUI()`)
 - The system includes robust error handling for database operations
 - In the current prototype, closing the main window (via X button or Logout) returns the user to the login screen
+
 - To end the program, close the login window
